@@ -1,3 +1,4 @@
+
 name: Build Android APK
 on:
   workflow_dispatch:
@@ -12,15 +13,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
 
       - name: Build APK on Expo Cloud
         run: |
-          cd apps/mobile
+          if [ -d "apps/mobile" ]; then
+            cd apps/mobile
+          else
+            cd */apps/mobile
+          fi
           eas build --platform android --profile apk --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
-
